@@ -6,10 +6,10 @@ RSpec.describe Enigma do
   describe 'encryption of message' do
     it 'can encrypt a message' do
       message = 'Hello'
-      code = '123412'
-      date = Date.today
+      code = '12341'
+      date = '051018'
 
-      expect(@enigma_machine.encrypt(message, code, date)).to eq('')
+      expect(@enigma_machine.encrypt(message, code, date)).to eq('zctae')
     end
 
     it 'can generate the correct character map' do
@@ -17,9 +17,8 @@ RSpec.describe Enigma do
     end
 
     it 'can rotate characters using the character map' do
-      expect(@enigma_machine.character_rotator('Hello')).to eq('')
+      expect(@enigma_machine.encrypt_message('Hello', '12341', '051018')).to eq('zctae')
     end
-    
 
     it 'can generate the correct rotation with a date and code' do
       expect(@enigma_machine.generate_character_rotation('12341', "051018").join).to eq('18263645')

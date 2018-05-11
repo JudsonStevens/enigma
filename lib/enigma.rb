@@ -1,11 +1,13 @@
+require 'time'
+
 class Enigma
   attr_reader :character_map
   def initialize
     @character_map = [*('a'..'z'), ' ', '.', ',']
   end
 
-  def encrypt(message, code = rand(10000..99999).to_s, date)
-
+  def encrypt(message, code = rand(10000..99999).to_s, date = Date.today)
+    encrypt_message(message, code, date.to_s)
   end
 
   def strip_and_make_message_array(message)
@@ -16,21 +18,31 @@ class Enigma
     date.strftime('%m%d%y')
   end
 
-  def character_rotator(message)
+  def encrypt_message(message, code, date)
     message_array = strip_and_make_message_array(message)
-    message_array.map_with_index do |character, index|
-      until index == (message_array.length - 1)
-        message_array.take(4).map do |element|
-          
-          @character_map.index(element)
-        end
-      end
+    return_encrypted_message(message_array, code, date)
+  end
+
+  def return_encrypted_message(message_array, code, date)
+    encrypted_message = []
+    (message_array.length - 1).times do
+      encrypted_message <<
+        return_encrypted_message_array(message_array, code, date)
+    end
+    encrypted_message.flatten.compact.join
+  end
+
+  def return_encrypted_message_array(message_array, code, date)
+    message_array.shift(4).map.with_index do |character, index|
+      next if character.nil?
+      @character_map[find_the_rotated_index(character, index, code, date)]
     end
   end
 
-  def find_the_rotated_index(character)
-    generate_character_rotation
-
+  def find_the_rotated_index(character, index, code, date)
+    character_rotation_array = generate_character_rotation(code, date)
+    (@character_map.index(character.downcase) + character_rotation_array[index]) % 28
+  end
 
   def generate_character_rotation(code, date)
     [generate_a_rotation(code, date),
